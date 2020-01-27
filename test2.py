@@ -1,9 +1,5 @@
-# Importing random to generate  
-# random string sequence  
-import random
-
-# Importing string library function  
-import string
+# Importing random, string hashlib
+import random, string, hashlib
 
 
 def rand_pass(size):
@@ -22,7 +18,6 @@ count = input("Wie viele Zeichen? ")
 site = input("Für welche Seite generieren Sie das Passwort? ")
 # Driver Code
 password = rand_pass(int(count))
-password_list = {}
-password_list.join(site, password)
 print("Dein Passwort für >>> " + site + " <<< lautet: " + password)
-print(password_list)
+password_salt = hashlib.sha3_224(password.encode("utf-8")).hexdigest()
+print(password_salt)
