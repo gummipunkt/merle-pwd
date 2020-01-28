@@ -1,8 +1,6 @@
 # Importing random, string hashlib
 import random, string, hashlib, time, os, sqlite3
 
-# run database initally
-
 salt = os.urandom(64)  # create salt
 
 def rand_pass(size):
@@ -37,8 +35,8 @@ password_salt = hashlib.pbkdf2_hmac(
     "sha256",  # The hash digest algorithm for HMAC
     password.encode("utf-8"), # Convert the password to bytes
     salt,  # Provide the salt
-    500000,  # 500.000 iterations
-    dklen = 64  # 128 byte key (32bit recommend, 64, 128, 256, 512 eg possible. standard: 65)
+    200000,  # 200.000 iterations
+    dklen = 64  # 64 byte key (32bit recommend, 64, 128, 256, 512 eg possible. standard: 65)
 )
 
 storage = salt + password_salt  # store salt and key
