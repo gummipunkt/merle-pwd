@@ -1,6 +1,7 @@
 # Importing random, string hashlib
-import random, string, hashlib, shelve, time
+import random, string, hashlib, shelve, time, os
 
+salt = os.urandom(256) # create salt
 
 def rand_pass(size):
     # Takes random choices from
@@ -25,13 +26,19 @@ password = rand_pass(int(count))
 print("Dein Passwort für >>> " + site + " <<< lautet: " + password)
 
 # hash with hashlib and encode password utf8
-password_salt = hashlib.sha3_224(password.encode("utf-8")).hexdigest()
-print(password_salt)
+password_salt = hashlib.pbkdf2_hmac(
+    "sha256", # The hash digest algorithm for HMAC
+    password.encode("utf-8"), # Convert the password to bytes
+    salt, # Provide the salt
+    500000, # 500.000 iterations
+    dklen = 128 # 128 byte key (32bit recommend, 64, 128, 256, 512 possible. standard: 128)
+)
+#print("Der passende Hash: " + password_salt)
 
-# write user, hashed password and site into file
+# write user, hashed password and site into file. If file doesn't exist, create new tresor.
 save = shelve.open("tresor")
 created = time.strftime("%m/%d/%Y")
 # Time: Short Weekday, Short Month, Hour, Minute, Second, Year
-save[time.strftime("%a.%b.%H%M%S%Y")] = {"User": user, "Password": password_salt, "Site": site, "Created": created}
+save[time.strftime("%a.%b.%H%M%S%Y")] = {"User": user, "Password": password_salt, "Salt": salt, "Site": site, "Created": created}
 save.close()
 
