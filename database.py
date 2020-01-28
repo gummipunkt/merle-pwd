@@ -8,8 +8,8 @@ CREATE TABLE entries (
 unique_id INTEGER PRIMARY KEY, 
 user_email VARCHAR(50), 
 password VARCHAR(100),
-url VARCHAR(500),
-storage VARCHAR(500),
+url VARCHAR(255),
+storage VARCHAR(255),
 created VARCHAR(10));"""
 
 cursor.execute(sql_command)  # execute

@@ -20,6 +20,11 @@ def rand_pass(size):
 count = input("Wie viele Zeichen? ")
 url = input("Für welche Seite generieren Sie das Passwort? ")
 user = input("Wie lautet der Benutzername / E-Mailadresse? ")
+while user == url:
+    print("URL = Benutzer nicht möglich.")
+    user = input("Wie lautet der Benutzername / E-Mailadresse? ")
+else:
+   print("Passwort wird berechnet und in die Datenbank eingetragen!")
 
 # Driver Code
 password = rand_pass(int(count))
@@ -35,14 +40,13 @@ password_salt = hashlib.pbkdf2_hmac(
     500000,  # 500.000 iterations
     dklen = 64  # 128 byte key (32bit recommend, 64, 128, 256, 512 eg possible. standard: 65)
 )
-#print("Der passende Hash: " + password_salt)
+
 storage = salt + password_salt  # store salt and key
 
 #salt_from_storage = storage[:64] # 32bit is the  salt
 #key_from_storage = storage[64:]
 
-created = time.strftime("%m%d%Y.%H%M%S")
-
+created = time.strftime("%m%d%Y%.%H%M%S")
 userdata = [ (user, password_salt, url, storage, created ) ]
 
 connection = sqlite3.connect("tresor_sql.db") # connect to sqlite3
@@ -50,7 +54,7 @@ cursor = connection.cursor() # cursor sql
 
 for p in userdata:
     format_str = """INSERT INTO entries (unique_id, user_email, password, url, storage, created)
-    VALUES (NULL, "{user_email}", "{password}", "{url}", "(storage)", "(created)");"""
+    VALUES (NULL, "{user_email}", "{password}", "{url}", "{storage}", "{created}");"""
 
     sql_command = format_str.format(user_email=p[0], password=p[1], url=p[2], storage=p[3], created=p[4])
     cursor.execute(sql_command)
