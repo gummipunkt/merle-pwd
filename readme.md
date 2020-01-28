@@ -23,6 +23,7 @@ passwords, if you want with your self hosted on your server.
 - App: Android, iOS
 - Desktop: macOS, Linux, Windows
 - Salt Hash Keys
+- Edit password
 
 **Important**
 - Anyone has to take care, that the keys and files are safe. I can't do that. 

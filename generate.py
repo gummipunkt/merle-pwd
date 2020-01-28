@@ -1,5 +1,7 @@
 # Importing random, string hashlib
-import random, string, hashlib, shelve, time, os
+import random, string, hashlib, time, os
+
+
 
 salt = os.urandom(256) # create salt
 
@@ -16,14 +18,14 @@ def rand_pass(size):
 
 # abfrage
 count = input("Wie viele Zeichen? ")
-site = input("Für welche Seite generieren Sie das Passwort? ")
+url = input("Für welche Seite generieren Sie das Passwort? ")
 user = input("Wie lautet der Benutzername / E-Mailadresse? ")
 
 # Driver Code
 password = rand_pass(int(count))
 
 # show password
-print("Dein Passwort für >>> " + site + " <<< lautet: " + password)
+print("Dein Passwort für >>> " + url + " <<< lautet: " + password)
 
 # hash with hashlib and encode password utf8
 password_salt = hashlib.pbkdf2_hmac(
@@ -35,10 +37,16 @@ password_salt = hashlib.pbkdf2_hmac(
 )
 #print("Der passende Hash: " + password_salt)
 
-# write user, hashed password and site into file. If file doesn't exist, create new tresor.
-save = shelve.open("tresor")
+
+uniqueid = time.strftime("%H%M%S%Y")
 created = time.strftime("%m/%d/%Y")
-# Time: Short Weekday, Short Month, Hour, Minute, Second, Year
-save[time.strftime("%a.%b.%H%M%S%Y")] = {"User": user, "Password": password_salt, "Salt": salt, "Site": site, "Created": created}
-save.close()
+
+with shelve.open('tresor') as save:
+    save[uniqueid] = {
+        "User": user,
+        "Password": password_salt,
+        "Salt": salt,
+        "url": url,
+        "Created": created
+    }
 
