@@ -1,6 +1,18 @@
 import sqlite3
+connection = sqlite3.connect("tresor_sql.db")  # create database
+cursor = connection.cursor()  # set cursor
 
-connection = sqlite3.connect("tresor.db") #sqlite3
-cursor = connection.sursor() #sqlite3
+# create database with uniqueID, user or email, password, storage, creation date
+sql_command = """ 
+CREATE TABLE entries ( 
+unique_id INTEGER PRIMARY KEY, 
+user_email VARCHAR(50), 
+password VARCHAR(100),
+url VARCHAR(500),
+storage VARCHAR(500),
+created VARCHAR(10));"""
 
-https://www.python-kurs.eu/sql_python.php
+cursor.execute(sql_command)  # execute
+
+connection.commit()
+connection.close()
