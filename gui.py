@@ -22,9 +22,11 @@ window = sg.Window("merle-pwd v0.1 - NO PRODUCTIVE USE! IT IS CRAP!", layout)
 while True:  # Event Loop
     event, values = window.read()       # can also be written as event, values = window()
     print(event, values)
+
     if event is None or event == 'Exit':
         break
-    if event == 'Show':
+
+    elif event == 'Show':
         # change the "output" element to be the value of "input" element
         window['count'].update(values['count_input'])
         window['url'].update(values['url_input'])
@@ -78,6 +80,27 @@ while True:  # Event Loop
 
     created = time.strftime("%m%d%Y%.%H%M%S")
     userdata = [ (user, password_salt, url, storage, created ) ]
+
+    if os.path.exists("tresor.sql.db"):
+        pass
+    else:
+        connection = sqlite3.connect("tresor_sql.db")  # create database
+        cursor = connection.cursor()  # set cursor
+
+        # create database with uniqueID, user or email, password, storage, creation date
+        sql_command = """ 
+        CREATE TABLE entries ( 
+        unique_id INTEGER PRIMARY KEY, 
+        user_email VARCHAR(50), 
+        password VARCHAR(100),
+        url VARCHAR(255),
+        storage VARCHAR(255),
+        created VARCHAR(10));"""
+
+        cursor.execute(sql_command)  # execute
+
+        connection.commit()
+        connection.close()
 
     connection = sqlite3.connect("tresor_sql.db") # connect to sqlite3
     cursor = connection.cursor() # cursor sql
