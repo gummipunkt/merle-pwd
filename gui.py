@@ -1,5 +1,4 @@
-import PySimpleGUI as sg, random, string, hashlib, time, os, sqlite3
-
+import PySimpleGUI as sg, random, string, hashlib, time, os, sqlite3, os.path
 salt = os.urandom(64)  # create salt
 
 
@@ -81,8 +80,18 @@ while True:  # Event Loop
     created = time.strftime("%m%d%Y%.%H%M%S")
     userdata = [ (user, password_salt, url, storage, created ) ]
 
-    if os.path.exists("tresor.sql.db"):
-        pass
+    if os.path.isfile("tresor.sql.db") == False:
+        connection = sqlite3.connect("tresor_sql.db")  # connect to sqlite3
+        cursor = connection.cursor()  # cursor sql
+
+        for p in userdata:
+            format_str = """INSERT INTO entries (unique_id, user_email, password, url, storage, created)
+            VALUES (NULL, "{user_email}", "{password}", "{url}", "{storage}", "{created}");"""
+
+        sql_command = format_str.format(user_email=p[0], password=p[1], url=p[2], storage=p[3], created=p[4])
+        cursor.execute(sql_command)
+        connection.commit()
+        connection.close()
     else:
         connection = sqlite3.connect("tresor_sql.db")  # create database
         cursor = connection.cursor()  # set cursor
@@ -101,19 +110,6 @@ while True:  # Event Loop
 
         connection.commit()
         connection.close()
-
-    connection = sqlite3.connect("tresor_sql.db") # connect to sqlite3
-    cursor = connection.cursor() # cursor sql
-
-    for p in userdata:
-        format_str = """INSERT INTO entries (unique_id, user_email, password, url, storage, created)
-        VALUES (NULL, "{user_email}", "{password}", "{url}", "{storage}", "{created}");"""
-
-        sql_command = format_str.format(user_email=p[0], password=p[1], url=p[2], storage=p[3], created=p[4])
-        cursor.execute(sql_command)
-        connection.commit()
-        connection.close()
-
 
     window.close()
 
