@@ -58,4 +58,3 @@ for p in userdata:
     cursor.execute(sql_command)
     connection.commit()
     connection.close()
-
