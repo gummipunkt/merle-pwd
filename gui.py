@@ -80,37 +80,36 @@ while True:  # Event Loop
     created = time.strftime("%m%d%Y%.%H%M%S")
     userdata = [ (user, password_salt, url, storage, created ) ]
 
-    if os.path.isfile("tresor.sql.db") == False:
-        connection = sqlite3.connect("tresor_sql.db")  # connect to sqlite3
-        cursor = connection.cursor()  # cursor sql
-
-        for p in userdata:
-            format_str = """INSERT INTO entries (unique_id, user_email, password, url, storage, created)
-            VALUES (NULL, "{user_email}", "{password}", "{url}", "{storage}", "{created}");"""
-
-        sql_command = format_str.format(user_email=p[0], password=p[1], url=p[2], storage=p[3], created=p[4])
-        cursor.execute(sql_command)
-        connection.commit()
-        connection.close()
-    else:
+    if os.path.isfile("tresor.sql.db") == True:
         connection = sqlite3.connect("tresor_sql.db")  # create database
         cursor = connection.cursor()  # set cursor
 
         # create database with uniqueID, user or email, password, storage, creation date
         sql_command = """ 
-        CREATE TABLE entries ( 
-        unique_id INTEGER PRIMARY KEY, 
-        user_email VARCHAR(50), 
-        password VARCHAR(100),
-        url VARCHAR(255),
-        storage VARCHAR(255),
-        created VARCHAR(10));"""
+                CREATE TABLE entries ( 
+                unique_id INTEGER PRIMARY KEY, 
+                user_email VARCHAR(50), 
+                password VARCHAR(100),
+                url VARCHAR(255),
+                storage VARCHAR(255),
+                created VARCHAR(10));"""
 
         cursor.execute(sql_command)  # execute
 
         connection.commit()
         connection.close()
+    else:
+        connection = sqlite3.connect("tresor_sql.db")  # connect to sqlite3
+        cursor = connection.cursor()  # cursor sql
 
+        for p in userdata:
+            format_str = """INSERT INTO entries (unique_id, user_email, password, url, storage, created)
+                    VALUES (NULL, "{user_email}", "{password}", "{url}", "{storage}", "{created}");"""
+        sql_command = format_str.format(user_email=p[0], password=p[1], url=p[2], storage=p[3], created=p[4])
+        print(sql_command)
+        cursor.execute(sql_command)
+        connection.commit()
+        connection.close()
     window.close()
 
 sg.Popup('Passwort generiert',
