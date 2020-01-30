@@ -1,5 +1,5 @@
-import PySimpleGUI as sg, random, string, hashlib, time, os, sqlite3, os.path
-salt = os.urandom(64)  # create salt
+import PySimpleGUI as sg, random, string, hashlib, time, os, sqlite3, os.path, binascii
+salt = hashlib.sha256(os.urandom(256)).hexdigest().encode('ascii') # create salt
 
 
 ##  THEME
@@ -68,11 +68,13 @@ while True:  # Event Loop
         "sha256",  # The hash digest algorithm for HMAC
         password.encode("utf-8"), # Convert the password to bytes
         salt,  # Provide the salt
-        200000,  # 200.000 iterations
-        dklen = 64  # 64 byte key (32bit recommend, 64, 128, 256, 512 eg possible. standard: 65)
+        500000,  # 200.000 iterations
+        dklen = 256  # 64 byte key (32bit recommend, 64, 128, 256, 512 eg possible. standard: 65)
     )
 
-    storage = salt + password_salt  # store salt and key
+    password_salt = binascii.hexlify(password_salt)
+
+    storage = (salt + password_salt).decode('ascii')  # store salt and key
 
 #salt_from_storage = storage[:64] # 32bit is the  salt
 #key_from_storage = storage[64:]
@@ -86,13 +88,13 @@ while True:  # Event Loop
 
         # create database with uniqueID, user or email, password, storage, creation date
         sql_command = """ 
-                CREATE TABLE entries ( 
-                unique_id INTEGER PRIMARY KEY, 
-                user_email VARCHAR(50), 
-                password VARCHAR(100),
-                url VARCHAR(255),
-                storage VARCHAR(255),
-                created VARCHAR(10));"""
+        CREATE TABLE entries ( 
+        unique_id INTEGER PRIMARY KEY, 
+        user_email VARCHAR(50), 
+        password VARCHAR(100),
+        url VARCHAR(255),
+        storage VARCHAR(255),
+        created VARCHAR(10));"""
 
         cursor.execute(sql_command)  # execute
 
@@ -104,7 +106,7 @@ while True:  # Event Loop
 
         for p in userdata:
             format_str = """INSERT INTO entries (unique_id, user_email, password, url, storage, created)
-                    VALUES (NULL, "{user_email}", "{password}", "{url}", "{storage}", "{created}");"""
+                    VALUES (NULL, "{user_email}", NULL, "{url}", "{storage}", "{created}");"""
         sql_command = format_str.format(user_email=p[0], password=p[1], url=p[2], storage=p[3], created=p[4])
         print(sql_command)
         cursor.execute(sql_command)
