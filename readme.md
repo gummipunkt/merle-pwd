@@ -29,3 +29,19 @@ passwords, if you want with your self hosted on your server.
 - Anyone has to take care, that the keys and files are safe. I can't do that. 
 - This is a "how to learn coding with python". I tried it several times and I failed every single
 time. So I try it this way, perhaps it will work.
+
+** How to start **
+0) pip3 install PySimpleGui
+
+1) Clone Git
+clone git https://github.com/gummipunkt/merle-pwd.git
+
+2) move into folder
+
+3) python3 database.py (create database)
+
+4) python3 gui.py
+
+5) another terminal window
+python3 open.py
+to check
