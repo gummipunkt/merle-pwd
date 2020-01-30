@@ -46,3 +46,5 @@ clone git https://github.com/gummipunkt/merle-pwd.git
 5) another terminal window
 python3 open.py
 to check
+
+6) python3 database_delete.py to delete database
