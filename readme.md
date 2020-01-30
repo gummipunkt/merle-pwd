@@ -30,7 +30,8 @@ passwords, if you want with your self hosted on your server.
 - This is a "how to learn coding with python". I tried it several times and I failed every single
 time. So I try it this way, perhaps it will work.
 
-** How to start **
+**How to start**
+
 0) pip3 install PySimpleGui
 
 1) Clone Git
