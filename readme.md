@@ -10,8 +10,8 @@ passwords, if you want with your self hosted on your server.
 
 **What works**
 - Password creation (in a basic way)
-- Storing into a file
-    - Dictonary: Timecode, User, Site, Password
+- Storing into a sqlite3 database
+    - Dictonary: UniqueID, Timecode, User, Site, Key (Password Hash & Salt)
     
 **What should work**
 - GUI
@@ -30,7 +30,8 @@ passwords, if you want with your self hosted on your server.
 - This is a "how to learn coding with python". I tried it several times and I failed every single
 time. So I try it this way, perhaps it will work.
 
-** How to start **
+**How to start**
+
 0) pip3 install PySimpleGui
 
 1) Clone Git

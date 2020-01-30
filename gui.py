@@ -7,12 +7,15 @@ salt = hashlib.sha256(os.urandom(256)).hexdigest().encode('ascii') # create salt
 
 sg.theme('Dark Blue 3')  # please make your windows colorful
 
-layout = [[sg.Text('number of characters'), sg.Text(size=(50,2), key='count')],
+layout = [[sg.Text('Number of Characters'), sg.Text(size=(50,2), key='count')],
           [sg.Input(key='count_input')],
           [sg.Text('Website URL'), sg.Text(size=(12,2), key='url')],
           [sg.Input(key='url_input')],
           [sg.Text('Username or E-mail address'), sg.Text(size=(12,2), key='user')],
           [sg.Input(key='user_input')],
+          [sg.Frame(layout=[
+              [sg.Checkbox('Numbers', size=(20, 5), default=True), sg.Checkbox('Letters', default=True)],
+              [sg.Checkbox('Special Character', size=(10, 1), default=True)]], title='Options',title_color='red')],
           [sg.Button('Generate'), sg.Button('Close')],
          ]
 
@@ -20,7 +23,6 @@ window = sg.Window("merle-pwd v0.1 - NO PRODUCTIVE USE! IT IS CRAP!", layout)
 
 while True:  # Event Loop
     event, values = window.read()       # can also be written as event, values = window()
-    print(event, values)
 
     if event is None or event == 'Exit':
         break
@@ -36,15 +38,25 @@ while True:  # Event Loop
     url = values["url_input"]
     user = values["user_input"]
 
-
+    if values.get(0) == True:
+        numbers_dec = string.digits
+    else:
+        numbers_dec = ""
+    if values.get(1) == True:
+        letters_dec = string.ascii_uppercase + string.ascii_lowercase
+    else:
+        letters_dec = ""
+    if values.get(2) == True:
+        special_dec = string.punctuation
+    else:
+        special_dec = ""
 
     def rand_pass(size):
         # Takes random choices from
         # ascii_letters and digits
-        generate_pass = ''.join([random.choice(string.ascii_uppercase +
-                                               string.ascii_lowercase +
-                                               string.digits
-                                               )
+        generate_pass = ''.join([random.choice(letters_dec            +
+                                               numbers_dec            +
+                                               special_dec)
                                 for n in range(size)])
 
         return generate_pass
